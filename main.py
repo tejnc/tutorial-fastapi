@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI
 
 
@@ -5,7 +6,7 @@ app = FastAPI()
 
 # path operation decorator
 @app.get("/blog")
-def index(limit : int = 10 , published : bool = True):   # query parameter 
+def index(limit : int = 10 , published : bool = True, sort: Optional[str] = None):   # query parameter 
     # only get 10 published blogs
     if published:
         return {"data":f" {limit} published blogs from blog list"}
