@@ -6,7 +6,7 @@ from blog import schemas, models, database
 from blog.hashing import Hash
 
 router = APIRouter(
-    tags=["users"],
+    tags=["Users"],
     prefix="/user"
 )
 

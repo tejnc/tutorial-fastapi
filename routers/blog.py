@@ -5,17 +5,20 @@ from sqlalchemy.orm import Session
 from blog import schemas, models, database  # import blog module
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/blog",
+    tags=["Blogs"]
+)
 
 # get all the blogs
-@router.get("/blog" , response_model=List[schemas.ShowBlog], tags=['blogs'])
+@router.get("/" , response_model=List[schemas.ShowBlog])
 def all(db: Session = Depends(database.get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
 
 
 # create a blog post
-@router.post("/blog", status_code=status.HTTP_201_CREATED, tags=['blogs'])
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create(request: schemas.Blog, db: Session = Depends(database.get_db)):
     new_blog = models.Blog(title=request.title, body=request.body, user_id=1)
     db.add(new_blog)
@@ -25,7 +28,7 @@ def create(request: schemas.Blog, db: Session = Depends(database.get_db)):
 
 
 # deleting the data based on id
-@router.delete("/blog/delete/{id}" ,status_code=status.HTTP_204_NO_CONTENT , tags=['blogs'])
+@router.delete("/delete/{id}" ,status_code=status.HTTP_204_NO_CONTENT)
 def delete(id, db:Session = Depends(database.get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
     if not blog.first():
@@ -36,7 +39,7 @@ def delete(id, db:Session = Depends(database.get_db)):
 
 
 # updating the data in the database
-@router.put("/blog/{id}", status_code=status.HTTP_202_ACCEPTED, tags=['blogs'])
+@router.put("/{id}", status_code=status.HTTP_202_ACCEPTED)
 def update(id, request: schemas.Blog ,db: Session = Depends(database.get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
     if not blog.first():
@@ -49,7 +52,7 @@ def update(id, request: schemas.Blog ,db: Session = Depends(database.get_db)):
 
 
 # get the blog with the specific id
-@router.get("/blog/{id}", status_code=200 , response_model=schemas.ShowBlog, tags=['blogs'])
+@router.get("/{id}", status_code=200 , response_model=schemas.ShowBlog)
 def show(id, response: Response, db: Session = Depends(database.get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     if  not blog:
