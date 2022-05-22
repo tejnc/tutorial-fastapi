@@ -90,3 +90,12 @@ def create_user(request: schemas.User , db: Session = Depends(get_db)):
 def show_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
     return users
+
+
+# getting user id
+@app.get("/user/{id}",response_model=schemas.ShowUser)
+def get_user(id: int, db:Session=Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with id {id} is not available.")
+    return user
