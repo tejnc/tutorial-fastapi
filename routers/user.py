@@ -3,29 +3,24 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from blog import schemas, models, database
-from blog.hashing import Hash
+from functions import user
 
 router = APIRouter(
-    tags=["Users"],
-    prefix="/user"
+    prefix="/user",
+    tags=["Users"]
 )
+
 
 # Adding new user
 @router.post("/")
 def create_user(request: schemas.User , db: Session = Depends(database.get_db)):
-    new_user = models.User(name = request.name, email=request.email, password= Hash.bcrypt(password=request.password))
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    print(new_user)
-    return new_user
+    return user.create_user(request,db)
 
 
 # Displaying users
 @router.get("/all", response_model=List[schemas.ShowUser])
 def show_users(db: Session = Depends(database.get_db)):
-    users = db.query(models.User).all()
-    return users
+    return user.show_user(db)
 
 
 # getting user id
