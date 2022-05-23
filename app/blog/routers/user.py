@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from blog import schemas, models, database
-from functions import user
-from functions.oauth2 import get_current_user
+from blog.functions import user
+from blog.functions.oauth2 import get_current_user
 
 
 router = APIRouter(

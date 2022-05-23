@@ -6,7 +6,7 @@ from datetime import timedelta
 from blog import schemas,models
 from blog.database import get_db
 from blog.hashing import Hash
-from functions.jwttoken import create_access_token
+from blog.functions.jwttoken import create_access_token
 
 
 router = APIRouter(
